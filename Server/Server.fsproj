@@ -13,9 +13,7 @@
     <Watch Include="**\*.cshtml" Exclude="bin\**\*" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="appsettings.json" />
     <Content Include="Properties\launchSettings.json" />
     <Compile Include="DatabaseModels\Enums.fs" />
     <Compile Include="DatabaseModels\Data.fs" />

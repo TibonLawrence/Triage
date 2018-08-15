@@ -272,8 +272,6 @@ repl-temp-*
 # Dependency directories
 node_modules
 
-#appsettings
-./Server/appsettings.json
-
 # Desktop Services Store on macOS
 .DS_Store
+/Server/appsettings.json
