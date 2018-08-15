@@ -1,7 +1,6 @@
-﻿module DbHelpersV1
+﻿module DbHelpers
 
 open Giraffe
-open JsonV1
 open System
 open Microsoft.AspNetCore.Http
 open Data
@@ -35,39 +34,34 @@ let removeEvent (id:int, ctx: HttpContext)=
 
     dataContext.SaveChanges()
 
-let _getNotesAndEvents (timeStamp: DateTime, ctx: HttpContext, eventsOrNotes: EventsNotesBoth) : JsonV1.NotesAndEvents =
+let removeNote (id:int, ctx: HttpContext)=
     let dataContext = ctx.GetService<TriageData>()
-    { 
-        Events = 
-            match eventsOrNotes with
-            | EventsNotesBoth.Both | EventsNotesBoth.Events -> 
-                (dataContext.Events |>
-                    Seq.where(fun seq -> seq.Timestamp.Date = timeStamp.Date) |>
-                    Seq.map(fun dbEvent -> 
-                                            {
-                                                MatterId = dbEvent.MatterId
-                                                Category = Enum.GetName(typeof<Enums.Category>, dbEvent.Category)
-                                                Subject = dbEvent.Subject
-                                                UserId = dbEvent.User.Id
-                                                Action = dbEvent.Action
-                                                Timestamp = dbEvent.Timestamp
-                                            }) |> Seq.toList)
-            | EventsNotesBoth.Notes -> []
-        Notes =
-            match eventsOrNotes with
-            | EventsNotesBoth.Both | EventsNotesBoth.Notes -> 
-                (dataContext.Notes |>
-                        Seq.where(fun seq -> seq.Timestamp.Date = timeStamp.Date) |>
-                        Seq.map(fun dbNote -> {
-                                                MatterId = dbNote.MatterId
-                                                Subject = dbNote.Subject
-                                                Body = dbNote.Body
-                                                UserId = dbNote.User.Id
-                                                Timestamp = dbNote.Timestamp
-                                            }) |> Seq.toList)
+    dataContext.Notes.Remove(
+        {
+            Id = id
+            Body = ""
+            MatterId = 1
+            Subject = String.Empty
+            User = Unchecked.defaultof<User>
+            Timestamp = DateTime.MinValue
+        }) |> ignore
+
+    dataContext.SaveChanges()
+
+let _getNotesAndEvents (timeStamp: DateTime, ctx: HttpContext, eventsOrNotes: EventsNotesBoth) : (Event list * Note list) =
+    let dataContext = ctx.GetService<TriageData>()
+    (
+        match eventsOrNotes with
+        | EventsNotesBoth.Both | EventsNotesBoth.Events -> 
+            dataContext.Events |> Seq.where(fun seq -> seq.Timestamp.Date = timeStamp.Date) |> Seq.toList
+        | EventsNotesBoth.Notes -> []
+        ,
+        match eventsOrNotes with
+        | EventsNotesBoth.Both | EventsNotesBoth.Notes -> 
+            dataContext.Notes |> Seq.where(fun seq -> seq.Timestamp.Date = timeStamp.Date) |> Seq.toList
                                         
-            | EventsNotesBoth.Events -> []
-    }
+        | EventsNotesBoth.Events -> []
+    )
 
 let getNotes (timestamp, ctx) = _getNotesAndEvents (timestamp, ctx, EventsNotesBoth.Notes)
 

@@ -3,8 +3,7 @@
 open System
 open Giraffe
 open Microsoft.AspNetCore.Http
-open System.Security.Claims
-open Microsoft.AspNetCore.Authorization
+open MappingHelperV2
 open FSharp.Control
 open WebSocketHandler
 open Data
@@ -15,7 +14,7 @@ open DbHelpers
 
 let sendDataToSockets(ctx : HttpContext) = 
     let list = getEventsAndNotes (DateTime.Now, ctx)
-    list |> WebSocketHandler.SendDataToSockets
+    list |> mapEventsNotes |> WebSocketHandler.SendDataToSockets
 
 let postNoteHandler (next: HttpFunc) (ctx: HttpContext) =
     task {    

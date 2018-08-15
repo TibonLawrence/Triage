@@ -2,15 +2,10 @@
 
 module Middleware =
     open System
-    open System.Text
-    open System.Threading
     open System.Threading.Tasks
     open System.Net.WebSockets
     open Microsoft.AspNetCore.Http
-    open FSharp.Control.Tasks
     open WebSocketManager
-    open WebSocketHandler
-
     
     type WebSocketMiddleware(next : RequestDelegate) =
         let Receive (id: Guid, socket: WebSocket) =

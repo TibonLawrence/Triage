@@ -11,6 +11,7 @@ open DbHelpers
 open Newtonsoft.Json.Converters
 open System.IO
 open Newtonsoft.Json
+open MappingHelperV1
 
 //let indexHandler : HttpHandler =
 //    let model = { 
@@ -25,18 +26,17 @@ open Newtonsoft.Json
 
 //    razorHtmlView "Index" model
 
+
 let getEventsHandler(timeStamp: string) (next : HttpFunc) (ctx : HttpContext) =
-    ((DbHelpersV1.getEvents ((timeStamp |> timeStampOrNow), ctx)).Events |> json) next ctx
+    ((DbHelpers.getEvents ((timeStampOrNow timeStamp), ctx) |> mapEventsNotes).Events |> json) next ctx
 
 let getNotesHandler(timeStamp: string) (next : HttpFunc) (ctx : HttpContext) =
-    ((DbHelpersV1.getNotes ((timeStamp |> timeStampOrNow), ctx)).Notes |> json) next ctx
+    ((DbHelpers.getNotes ((timeStampOrNow timeStamp), ctx) |> mapEventsNotes).Notes |> json) next ctx
 
 let getNotesAndEventsHandler (timeStamp: string) (next: HttpFunc) (ctx : HttpContext) =
-    let settings = JsonSerializerSettings()
-    settings.Converters.Add(Converters.DiscriminatedUnionConverter())
-    (DbHelpersV1.getEventsAndNotes ((timeStamp|> timeStampOrNow), ctx) |> json) next ctx
+    ((DbHelpers.getEventsAndNotes ((timeStampOrNow timeStamp), ctx) |> mapEventsNotes) |> json) next ctx
 
-let getUserHandler (id) (next : HttpFunc) (ctx : HttpContext) =
-    let dataContext = ctx.GetService<TriageData>()
-    dataContext.users |> Seq.find(fun seq -> seq.Id = id)
+//let getUserHandler (id) (next : HttpFunc) (ctx : HttpContext) =
+//    let dataContext = ctx.GetService<TriageData>()
+//    dataContext.users |> Seq.find(fun seq -> seq.Id = id)
 

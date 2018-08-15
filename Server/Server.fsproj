@@ -20,18 +20,20 @@
     <Compile Include="Models\Common\Json.fs" />
     <Compile Include="Models\V1\Json.fs" />
     <Compile Include="Models\V2\Json.fs" />
-    <Compile Include="Helpers\V1\DbHelpers.fs" />
     <Compile Include="Helpers\AuthHelpers.fs" />
     <Compile Include="Helpers\DbHelpers.fs" />
     <Compile Include="Helpers\WebSocketManager.fs" />
-    <Compile Include="Helpers\WebSocketHandler.fs" />
-    <Compile Include="Middleware\WebSocketMiddleware.fs" />
     <Compile Include="Handlers\DeleteHandlers.fs" />
     <Compile Include="Handlers\AuthHandlers.fs" />
     <Compile Include="Handlers\ErrorHandlers.fs" />
+    <Compile Include="Handlers\V1\WebSocketHandler.fs" />
+    <Compile Include="Handlers\V1\MappingHelper.fs" />
     <Compile Include="Handlers\V1\GetHandlers.fs" />
     <Compile Include="Handlers\V1\PostHandlers.fs" />
+    <Compile Include="Handlers\V2\WebSocketHandler.fs" />
+    <Compile Include="Handlers\V2\MappingHelper.fs" />
     <Compile Include="Handlers\V2\PostHandlers.fs" />
+    <Compile Include="Middleware\WebSocketMiddleware.fs" />
     <Compile Include="Webapp.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

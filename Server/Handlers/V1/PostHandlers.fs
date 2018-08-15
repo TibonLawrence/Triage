@@ -20,7 +20,7 @@ let dummyUser userId =
 
 let sendDataToSockets(ctx : HttpContext) = 
     let list = getEventsAndNotes (DateTime.Now, ctx)
-    list |> WebSocketHandler.SendDataToSockets
+    list |> MappingHelperV1.mapEventsNotes |> WebSocketHandler.SendDataToSockets
 
 let postNoteHandler (next: HttpFunc) (ctx: HttpContext) =
     task {    
