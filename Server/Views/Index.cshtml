@@ -1,0 +1,57 @@
+@model TriageServer.Models.Message
+@{
+    Layout = "_Layout";
+}
+@{
+    await Html.RenderPartialAsync("Partial");
+}
+<!--<p>
+    @Model.Text
+</p>-->
+<noscript>
+    You need to enable JavaScript to run this app.
+</noscript>
+<div id="root"></div>
+<!--<div id="app">
+    <ul>
+        <li m-for="message in messages">{{ message }}</li>
+    </ul>
+</div>
+<script src="https://unpkg.com/moonjs@0.11.0/dist/moon.js"></script>
+<script>
+    function openWebSocket(vm) {
+        const socket = new WebSocket('ws://localhost:49404/ws');
+
+        socket.onopen = function () {
+            console.log('INFO: WebSocket opened successfully');
+        }
+
+        socket.onclose = function () {
+            console.log('INFO: WebSocket closed');
+            openWebSocket(vm);
+        }
+
+        socket.onmessage = function (messageEvent) {
+            const messages = vm.get('messages');
+
+            messages.unshift(messageEvent.data);
+
+            vm.set('messages', messages);
+        }
+
+        vm.set('socket', socket);
+    }
+
+    const app = new Moon({
+        el: '#app',
+        data: {
+            messages: []
+        },
+        hooks: {
+            init: function () {
+                const vm = this;
+                openWebSocket(vm);
+            }
+        }
+    });
+</script>-->

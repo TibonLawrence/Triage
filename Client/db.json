@@ -1,0 +1,28 @@
+{
+    "departments": [
+        {
+            "id": "1",
+            "department": "F201"
+        },
+        {
+            "id": "2",
+            "department": "F301"
+        },
+        {
+            "id": "3",
+            "department": "F401"
+        },
+        {
+            "id": "4",
+            "department": "F402"
+        },
+        {
+            "id": "5",
+            "department": "F501"
+        },
+        {
+            "id": "6",
+            "department": "F502"
+        }
+    ]
+}
