@@ -2,7 +2,6 @@ module JsonV2
 
 open System
 open Json
-open System.ComponentModel.DataAnnotations
     
 
 [<CLIMutable>]

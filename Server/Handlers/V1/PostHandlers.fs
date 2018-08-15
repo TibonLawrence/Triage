@@ -4,7 +4,7 @@ open System
 open Giraffe
 open Microsoft.AspNetCore.Http
 open FSharp.Control
-open WebSocketHandler
+open WebSocketHandlerV1
 open Data
 open Enums
 open JsonV1
@@ -15,7 +15,7 @@ let dummyUser userId =
         Id = userId
         Email = ""
         DisplayName = ""
-        Role = Role.Guest
+        Roles = Role.Guest
     }
 
 let sendDataToSockets(ctx : HttpContext) = 
@@ -25,7 +25,6 @@ let sendDataToSockets(ctx : HttpContext) =
 let postNoteHandler (next: HttpFunc) (ctx: HttpContext) =
     task {    
         let! message = ctx.BindJsonAsync<Note>() 
-        //do! sendMessageToSockets message.Text
         let dataContext = ctx.GetService<TriageData>()
         let dbNote = {
                         Id = 0
@@ -45,7 +44,6 @@ let postNoteHandler (next: HttpFunc) (ctx: HttpContext) =
 let postEventHandler (next : HttpFunc) (ctx : HttpContext) =
     task {
         let! message = ctx.BindJsonAsync<Event>() 
-        //do! sendMessageToSockets message.Text
         let dataContext = ctx.GetService<TriageData>()
         let dbEvent = {
                 Id = 0
@@ -53,12 +51,6 @@ let postEventHandler (next : HttpFunc) (ctx : HttpContext) =
                 Category = Enum.Parse(typeof<Category>, message.Category) :?> Category
                 Subject = message.Subject
                 User = dummyUser message.UserId
-                        //ctx |> AuthHandlers.getCurrentUser 
-                        //if String.IsNullOrEmpty ctx.User.Identity.Name then
-                        //    Guid.Empty
-                        // else
-                        //    Guid.Empty
-                        //User.FindFirst(ClaimTypes.NameIdentifier).Value
                 Action = message.Action
                 Timestamp = DateTime.Now
             }

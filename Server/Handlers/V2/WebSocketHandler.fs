@@ -1,4 +1,4 @@
-﻿module WebSocketHandler
+﻿module WebSocketHandlerV2
 
 open System
 open System.Text

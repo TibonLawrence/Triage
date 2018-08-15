@@ -7,18 +7,6 @@ open Enums
 open System.ComponentModel.DataAnnotations.Schema
 
 [<CLIMutable>]
-[<Table("Users")>]
-type User = 
-    {
-        [<Key>]
-        Id: Guid
-        Email: string
-        DisplayName: string
-        [<DatabaseGenerated(DatabaseGeneratedOption.Identity)>]
-        Role: Role
-    }
-
-[<CLIMutable>]
 [<Table("Events")>]
 type Event = 
     {
@@ -33,10 +21,18 @@ type Event =
         User: User
         Timestamp: DateTime
     } 
-    
-[<CLIMutable>]
-[<Table("Notes")>]
-type Note =
+and [<CLIMutable>] [<Table("Users")>]
+    User = 
+        {
+            [<Key>]
+            Id: Guid
+            Email: string
+            DisplayName: string
+            [<DatabaseGenerated(DatabaseGeneratedOption.Identity)>]
+            Roles: Role
+        }
+and [<CLIMutable>] [<Table("Notes")>]
+    Note =
     {
         [<Key>]
         [<DatabaseGenerated(DatabaseGeneratedOption.Identity)>]

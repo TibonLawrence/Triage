@@ -2,7 +2,6 @@
 
 open Giraffe
 open GetHandlersV1
-open PostHandlersV1
 open AuthHandlers
 open DeleteHandlers
                                                     
@@ -11,7 +10,6 @@ open DeleteHandlers
 // ---------------------------------
 
 let webApp: HttpHandler =
-    //mustBeAuthenticated >=> choose [
     choose [
         GET >=>
             choose [
@@ -26,16 +24,27 @@ let webApp: HttpHandler =
                             ])
                         ])
             ]
-        POST >=>
-            choose [
-                route "/api/v1/event" >=> postEventHandler
-                route "/api/v1/note" >=> postNoteHandler
-            ]
-        //mustBeAuthenticated >=>
-            //DELETE >=>
-            //    choose [
-            //        routef "/api/v2/event/%i" deleteEventHandler
-            //        routef "/api/v2/note/%i" deleteNoteHandler
-            //    ]
-        setStatusCode 404 >=> text "Not Found" ] 
+        mustBeAuthenticated >=>
+            POST >=>
+                choose [
+                    subRoute "/api"
+                        (choose [
+                            subRoute "/v2"
+                                (choose [
+                                    route "/event" >=> PostHandlersV2.postEventHandler
+                                    route "/note" >=> PostHandlersV2.postNoteHandler
+                                ])
+                            ])
+                        ]
+                DELETE >=>
+                    subRoute "/api"
+                        (choose [
+                            subRoute "/v2"
+                                (choose [
+                                    routef "/event/%i" deleteEventHandler
+                                    routef "/note/%i" deleteNoteHandler
+                                ])
+                            ])
+        setStatusCode 404 >=> text "Not Found" 
+    ]
 

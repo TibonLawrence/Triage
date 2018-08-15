@@ -6,10 +6,12 @@ open System
 open Enums
 open System.Security.Claims
 
-let getUser (ctx : HttpContext) =
+
+let userFromCtx (ctx : HttpContext) =
     {
-        Id = Guid.Parse(ctx.User.FindFirst(fun c -> c.Type = ClaimTypes.NameIdentifier).Value)
+        Id = Guid.Parse (ctx.User.FindFirst(fun c -> c.Type = "http://schemas.microsoft.com/identity/claims/objectidentifier").Value)
         Email = ctx.User.FindFirst(fun c -> c.Type = "preferred_username").Value
         DisplayName = ctx.User.FindFirst(fun c -> c.Type = "name").Value
-        Role = Role.User
+        Roles = Role.Guest
     }
+    

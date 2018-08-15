@@ -6,6 +6,11 @@ open Microsoft.AspNetCore.Http
 open Data
 open System.Diagnostics.Tracing
 open Enums
+open Microsoft.AspNetCore.Authentication.JwtBearer
+open Microsoft.Extensions.Configuration
+open Microsoft.AspNetCore.Authentication
+open Microsoft.AspNetCore.Http
+open System.Security.Claims
 
 type EventsNotesBoth =
     | Events = 0
@@ -18,6 +23,15 @@ let timeStampOrNow (timeStamp: string) =
     with
     | :? System.FormatException -> DateTime.Now
     | _ -> DateTime.Now
+
+
+let dummyUser(id: Guid) =
+    {
+        Id = id
+        Email = String.Empty
+        DisplayName = String.Empty
+        Roles = Role.Guest
+    }
 
 let removeEvent (id:int, ctx: HttpContext)=
     let dataContext = ctx.GetService<TriageData>()
@@ -68,3 +82,10 @@ let getNotes (timestamp, ctx) = _getNotesAndEvents (timestamp, ctx, EventsNotesB
 let getEvents (timestamp, ctx) = _getNotesAndEvents (timestamp, ctx, EventsNotesBoth.Events)
 
 let getEventsAndNotes (timestamp, ctx) = _getNotesAndEvents (timestamp, ctx, EventsNotesBoth.Both)
+
+let tryAddUser (ctx: HttpContext) =
+    let db = ctx.GetService<TriageData>()
+    let user = AuthHelpers.userFromCtx ctx
+    match box (db.Users.Find user) with
+    | null -> db.Users.Add (user)
+    | x -> unbox x
