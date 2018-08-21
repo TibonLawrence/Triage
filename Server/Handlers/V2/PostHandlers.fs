@@ -6,8 +6,9 @@ open Microsoft.AspNetCore.Http
 open MappingHelperV2
 open FSharp.Control
 open WebSocketHandlerV2
-open Data
+open Models
 open Enums
+open Context
 open DbHelpers
 
 
@@ -20,18 +21,19 @@ let postNoteHandler (next: HttpFunc) (ctx: HttpContext) =
     task {    
         let! message = ctx.BindJsonAsync<JsonV2.Note>() 
         //do! sendMessageToSockets message.Text
-        let dataContext = ctx.GetService<TriageData>()
-        let dbNote = {
-                        Id = 0
-                        MatterId = message.MatterId
-                        Subject = message.Subject
-                        Body = message.Body
-                        User = AuthHelpers.userFromCtx ctx
+        let dataContext = ctx.GetService<TriageContext>()
+        let user = tryAddUser ctx 
+        let dbNote = new Note(
+                        Id = 0,
+                        MatterId = message.MatterId,
+                        Subject = message.Subject,
+                        Body = message.Body,
+                        UserId = user.Id,
                         Timestamp = DateTime.Now
-                    }
+                    )
 
         dataContext.Notes.Add (dbNote) |> ignore
-        let! _ = dataContext.SaveChangesAsync true
+        dataContext.SaveChanges() |> ignore
         do! ctx |> sendDataToSockets |> Async.StartAsTask
         return! next ctx
     }
@@ -40,19 +42,22 @@ let postEventHandler (next : HttpFunc) (ctx : HttpContext) =
     task {
         let! message = ctx.BindJsonAsync<JsonV2.Event>() 
         //do! sendMessageToSockets message.Text
-        let dataContext = ctx.GetService<TriageData>()
-        let dbEvent = {
-                Id = 0
-                MatterId = message.MatterId
-                Category = Enum.Parse(typeof<Category>, message.Category) :?> Category
-                Subject = message.Subject
-                User = AuthHelpers.userFromCtx ctx
-                Action = message.Action
+        let dataContext = ctx.GetService<TriageContext>()
+        let user = tryAddUser ctx
+        let category = Enum.Parse(typeof<Category>, message.Category) :?> Category
+        
+        let dbEvent = 
+            new Event(Id = 0,
+                MatterId = message.MatterId,
+                Category = category,
+                Subject = message.Subject,
+                UserId = user.Id,
+                Action = message.Action,
                 Timestamp = DateTime.Now
-            }
+            )
 
         dataContext.Events.Add (dbEvent) |> ignore
-        let! _ = dataContext.SaveChangesAsync true
+        dataContext.SaveChanges() |> ignore
         do! ctx |> sendDataToSockets |> Async.StartAsTask
             
         return! next ctx
@@ -61,7 +66,7 @@ let postEventHandler (next : HttpFunc) (ctx : HttpContext) =
 let postUserHandler (next : HttpFunc) (ctx : HttpContext) =
     task {
         let! message = ctx.BindJsonAsync<User>()
-        let dataContext = ctx.GetService<TriageData>()
+        let dataContext = ctx.GetService<TriageContext>()
         dataContext.Users.Add (message) |> ignore
         let! _ = dataContext.SaveChangesAsync true
         return! next ctx

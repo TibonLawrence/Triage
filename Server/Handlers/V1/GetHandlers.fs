@@ -2,9 +2,7 @@
 
 open System
 open Giraffe
-open Giraffe.Razor
 open Microsoft.AspNetCore.Http
-open Data
 open JsonV1
 open System.Net
 open DbHelpers

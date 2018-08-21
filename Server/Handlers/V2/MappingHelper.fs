@@ -1,10 +1,10 @@
 ﻿module MappingHelperV2
 
 open JsonV2
-open Data
+open Models
 open System
 
-let mapEventsNotes (eventsNotes : (Data.Event list * Data.Note list)) = 
+let mapEventsNotes (eventsNotes : (Event list * Note list)) = 
     {
         Events =
             fst eventsNotes |> List.map(

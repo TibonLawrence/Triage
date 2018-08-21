@@ -3,7 +3,7 @@
 open JsonV1
 open System
 
-let mapEventsNotes (eventsNotes: (Data.Event list * Data.Note list)) = 
+let mapEventsNotes (eventsNotes: (Models.Event list * Models.Note list)) = 
     {
         Events =
             fst eventsNotes |> List.map(

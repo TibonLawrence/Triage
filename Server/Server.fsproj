@@ -15,14 +15,14 @@
   <ItemGroup>
     <Content Include="appsettings.json" />
     <Content Include="Properties\launchSettings.json" />
-    <Compile Include="DatabaseModels\Enums.fs" />
-    <Compile Include="DatabaseModels\Data.fs" />
     <Compile Include="Models\Common\Json.fs" />
     <Compile Include="Models\V1\Json.fs" />
     <Compile Include="Models\V2\Json.fs" />
-    <Compile Include="Helpers\AuthHelpers.fs" />
-    <Compile Include="Helpers\DbHelpers.fs" />
     <Compile Include="Helpers\WebSocketManager.fs" />
+    <Compile Include="Database\Enums.fs" />
+    <Compile Include="Database\Models.fs" />
+    <Compile Include="Database\Context.fs" />
+    <Compile Include="Database\DbAccessor.fs" />
     <Compile Include="Handlers\DeleteHandlers.fs" />
     <Compile Include="Handlers\AuthHandlers.fs" />
     <Compile Include="Handlers\ErrorHandlers.fs" />

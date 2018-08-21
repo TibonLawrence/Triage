@@ -14,12 +14,10 @@ open Microsoft.EntityFrameworkCore
 
 
 open ErrorHandlers
-open Data
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.FileProviders
 open Microsoft.AspNetCore.Authentication.JwtBearer
-open System.Security.Claims
-open Microsoft.AspNetCore.Authentication
+open Context
 
 
 // ---------------------------------
@@ -68,7 +66,7 @@ let main _ =
                                 .AddJsonFile("appsettings.json")
                                 .AddEnvironmentVariables().Build()
         let connString = configuration.GetConnectionString("TriageServer")
-        services.AddDbContext<TriageData>(fun contextBuilder -> contextBuilder.UseSqlServer connString |> ignore) |> ignore
+        services.AddDbContext<TriageContext>(fun contextBuilder -> contextBuilder.UseSqlServer connString |> ignore) |> ignore
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(fun opt -> configuration.Bind("JwtBearer", opt)) |> ignore
         //services.AddAuthorization(fun options ->
