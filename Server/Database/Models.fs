@@ -10,50 +10,34 @@ open System.Collections.Generic
 
 [<Table("Events")>]
 type Event() = 
-    let mutable id = 0
-    let mutable matterId = 0
-    let mutable category = Category.Disposition
-    let mutable action = String.Empty
-    let mutable subject = String.Empty
-    let mutable userId = Guid.Empty
-    let mutable timeStamp = DateTime.MinValue
-
-
     [<Key>]
     [<DatabaseGenerated(DatabaseGeneratedOption.Identity)>]
-    member __.Id with get() = id and set v = id <- v
-    member __.MatterId with get() = matterId and set v = matterId <- v
-    member __.Category with get() = category and set v = category <- v
-    member __.Action with get() = action and set v = action <- v
-    member __.Subject with get() = subject and set v = subject <- v
+    member val Id = 0 with get, set
+    member val MatterId = 0 with get, set
+    member val Category = Category.Disposition with get, set
+    member val Action = String.Empty with get, set
+    member val Subject = String.Empty with get, set
     [<Required>]
-    member __.UserId with get() = userId and set v = userId <- v
+    member val UserId = Guid.Empty with get, set
     [<ForeignKey("UserId")>]
-    abstract member User: User
-    default val User = Unchecked.defaultof<User>
-    member __.Timestamp with get() = timeStamp and set v = timeStamp <- v
+    abstract member User: User with get, set
+    default val User = Unchecked.defaultof<User> with get, set
+    member val Timestamp = DateTime.MinValue with get, set
+
 
 and [<Table("Notes")>] Note() =
-    let mutable id = 0
-    let mutable matterId = 0
-    let mutable category = Category.Disposition
-    let mutable subject = String.Empty
-    let mutable body = String.Empty
-    let mutable userId = Guid.Empty
-    let mutable timeStamp = DateTime.MinValue
-    
     [<Key>]
     [<DatabaseGenerated(DatabaseGeneratedOption.Identity)>]
-    member __.Id with get() = id and set v = id <- v
-    member __.MatterId with get() = matterId and set v = matterId <- v
-    member __.Subject with get() = subject and set v = subject <- v
-    member __.Body with get() = body and set v = body <- v
+    member val Id = 0 with get, set
+    member val MatterId = 0 with get, set
+    member val Subject = String.Empty with get, set
+    member val Body = String.Empty with get, set
     [<Required>]
-    member __.UserId with get() = userId and set v = userId <- v
+    member val UserId = Guid.Empty with get, set
     [<ForeignKey("UserId")>]
-    abstract member User: User
-    default val User = Unchecked.defaultof<User>
-    member __.Timestamp with get() = timeStamp and set v = timeStamp <- v
+    abstract member User: User with get, set
+    default val User = Unchecked.defaultof<User> with get, set
+    member val Timestamp = DateTime.MinValue with get, set
 
    
 and [<Table("Users")>] User() = 
